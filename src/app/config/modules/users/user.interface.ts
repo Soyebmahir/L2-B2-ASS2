@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Model } from 'mongoose';
 
 export type TFullName = {
@@ -25,7 +26,7 @@ export type TUser = {
   isActive: 'active' | 'blocked';
   hobbies: string[];
   address: TAddress;
-  orders: TOrder[];
+  orders?: TOrder[];
 };
 
 export interface UniqueUserModel extends Model<TUser> {

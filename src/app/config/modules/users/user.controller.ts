@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response } from 'express';
 import { ZodError } from 'zod';
 import userValidationSchema from './user.validation';
@@ -19,7 +20,7 @@ const createUser = async (req: Request, res: Response) => {
             message: 'User Created sucessfully.',
             data: savedUser,
         });
-    } catch (error) {
+    } catch (error: any) {
 
         // If parsing fails, handle the error
         if (error instanceof ZodError) {
@@ -55,7 +56,7 @@ const getAllUsers = async (req: Request, res: Response) => {
             data: result,
         });
 
-    } catch (error) {
+    } catch (error: any) {
         //  unexpected Error
 
         res.status(500).json({
@@ -80,7 +81,7 @@ const getSingleUser = async (req: Request, res: Response) => {
             data: result,
         });
 
-    } catch (error) {
+    } catch (error: any) {
 
         //  unexpected Error
 
@@ -106,7 +107,7 @@ const updateUserById = async (req: Request, res: Response) => {
             message: 'User Updated Successfully.',
             data: savedUser,
         });
-    } catch (error) {
+    } catch (error: any) {
         //  unexpected Error
 
         res.status(500).json({
@@ -123,13 +124,13 @@ const updateUserById = async (req: Request, res: Response) => {
 const deleteUserById = async (req: Request, res: Response) => {
     try {
         const { userId } = req.params;
-        const result = await UserServices.deleteUserFromDb(Number(userId))
+        await UserServices.deleteUserFromDb(Number(userId))
         res.status(200).json({
             success: true,
             message: 'User deleted Successfully.',
             data: null,
         });
-    } catch (error) {
+    } catch (error: any) {
         //  unexpected Error
 
         res.status(500).json({

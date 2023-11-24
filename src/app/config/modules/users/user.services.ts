@@ -1,3 +1,4 @@
+
 import { TUser } from './user.interface';
 import { Users } from './user.model';
 
@@ -11,7 +12,7 @@ const createUserIntoDb = async (user: TUser) => {
 };
 
 const getAllUsersFromDB = async () => {
-    return await Users.find({}, { username: 1, fullName: 1, age: 1, email: 1, address: 1 })
+    return await Users.find({}, { username: 1, fullName: 1, age: 1, email: 1, address: 1, _id: 0 })
 }
 
 const getSingleUserFromDB = async (id: number) => {
@@ -27,9 +28,13 @@ const updateUserByIdIntoDB = async (id: number, data: TUser) => {
         throw new Error('This User not Exist in database');
     }
     const user = await Users.findOne({ userId: id });
-    return await user.set(data).save();
+    if (!user) {
+        throw new Error('User not found');
+    }
+    return await user?.set(data).save();
 
 };
+
 
 const deleteUserFromDb = async (id: number) => {
     if (!await Users.isUserExist(id)) {

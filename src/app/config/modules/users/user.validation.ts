@@ -40,6 +40,6 @@ const userValidationSchema = z.object({
   isActive: z.enum(['active', 'blocked']).default('active'),
   hobbies: z.array(z.string()).min(1, 'Hobbies are required'),
   address: addressValidationSchema,
-  orders: z.array(orderValidationSchema),
+  orders: z.array(orderValidationSchema).optional(),
 });
 export default userValidationSchema;

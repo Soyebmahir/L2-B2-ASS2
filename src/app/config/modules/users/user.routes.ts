@@ -1,9 +1,11 @@
 import express from 'express';
-import { StudentController } from './user.controller';
+import { UserController } from './user.controller';
 
 const router = express.Router();
 router
-    .post('/', StudentController.createUser)
-    .get('/:userId', StudentController.getSingleUser);
+    .post('/', UserController.createUser)
+    .get('/', UserController.getAllUsers)
+    .get('/:userId', UserController.getSingleUser)
+    .put('/:userId', UserController.updateUserById)
 
 export const UserRoutes = router;

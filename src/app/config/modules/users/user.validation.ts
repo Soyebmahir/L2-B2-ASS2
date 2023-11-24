@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-const userFullNameValidationSchema = z.object({
+export const userFullNameValidationSchema = z.object({
   firstName: z
     .string()
     .min(1, { message: 'First name must be at least 1 character long' })
@@ -10,7 +10,7 @@ const userFullNameValidationSchema = z.object({
     .min(1, { message: 'Last name must be at least 1 character long' })
     .trim(),
 });
-const addressValidationSchema = z.object({
+export const addressValidationSchema = z.object({
   street: z
     .string()
     .trim()
@@ -25,7 +25,7 @@ const addressValidationSchema = z.object({
     .min(1, { message: 'Country name must be at least 1 character long' }),
 });
 
-const orderValidationSchema = z.object({
+export const orderValidationSchema = z.object({
   productName: z.string(),
   price: z.number(),
   quantity: z.number(),

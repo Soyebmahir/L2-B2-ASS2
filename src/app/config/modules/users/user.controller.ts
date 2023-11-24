@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response } from 'express';
 import { ZodError } from 'zod';
-import userValidationSchema from './user.validation';
+import userValidationSchema, { orderValidationSchema } from './user.validation';
 import { UserServices } from './user.services';
 
 const createUser = async (req: Request, res: Response) => {
@@ -9,15 +9,15 @@ const createUser = async (req: Request, res: Response) => {
         const user = req.body;
 
         // Try to parse the user data with Zod schema
-        const zodParseData = userValidationSchema.parse(user);
+        const zodParseUser = userValidationSchema.parse(user);
 
-        const result = await UserServices.createUserIntoDb(zodParseData);
+        const result = await UserServices.createUserIntoDb(zodParseUser);
         const savedUser = await UserServices.getSingleUserFromDB(result.userId);
 
         // If parsing is successful, send the parsed data in the response
         res.status(200).json({
             success: true,
-            message: 'User Created sucessfully.',
+            message: 'User Created successfully.',
             data: savedUser,
         });
     } catch (error: any) {
@@ -144,11 +144,49 @@ const deleteUserById = async (req: Request, res: Response) => {
     }
 }
 
+const addProductInOrders = async (req: Request, res: Response) => {
+    try {
+        const { userId } = req.params
+        const product = req.body
+
+        const zodParseProduct = orderValidationSchema.parse(product)
+        const user = await UserServices.getSingleUserFromDB(Number(userId))
+        if (!user) {
+            res.status(500).json({
+                success: false,
+                message: 'User not Found',
+                error: {
+                    code: 404,
+                    description: "User not found"
+                },
+            });
+        }
+        await UserServices.addProductInOrderById(Number(userId), zodParseProduct)
+        res.status(200).json({
+            success: true,
+            message: 'Order created Successfully.',
+            data: null,
+        });
+    } catch (error: any) {
+        //  unexpected Error
+
+        res.status(500).json({
+            success: false,
+            message: error.message,
+            error: {
+                code: 404,
+                description: error.message,
+            },
+        });
+    }
+
+}
 
 export const UserController = {
     createUser,
     getSingleUser,
     getAllUsers,
     updateUserById,
-    deleteUserById
+    deleteUserById,
+    addProductInOrders
 };

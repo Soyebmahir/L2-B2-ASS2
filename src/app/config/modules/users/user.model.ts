@@ -45,8 +45,13 @@ const OrderSchema = new Schema<TOrder>({
 
 const UserSchema = new Schema<TUser>({
     userId: {
-        types: Number,
+        type: Number,
         required: [true, 'User ID is required'],
+        unique: true,
+    },
+    username: {
+        type: String,
+        required: [true, 'User Name is required'],
         unique: true,
     },
     password: {

@@ -7,5 +7,6 @@ router
     .get('/', UserController.getAllUsers)
     .get('/:userId', UserController.getSingleUser)
     .put('/:userId', UserController.updateUserById)
+    .delete('/:userId', UserController.deleteUserById)
 
 export const UserRoutes = router;

@@ -6,8 +6,8 @@ const createUserIntoDb = async (user: TUser) => {
         throw new Error('User Already existed');
     }
 
-    const result = await Users.create(user);
-    return result;
+    return await Users.create(user);
+
 };
 
 const getAllUsersFromDB = async () => {
@@ -27,13 +27,21 @@ const updateUserByIdIntoDB = async (id: number, data: TUser) => {
         throw new Error('This User not Exist in database');
     }
     const user = await Users.findOne({ userId: id });
-    const result = await user.set(data).save();
-    return result;
+    return await user.set(data).save();
+
 };
+
+const deleteUserFromDb = async (id: number) => {
+    if (!await Users.isUserExist(id)) {
+        throw new Error('User with this ID is not Exist in database ');
+    }
+    return await Users.deleteOne({ userId: id })
+}
 
 export const UserServices = {
     createUserIntoDb,
     getSingleUserFromDB,
     getAllUsersFromDB,
-    updateUserByIdIntoDB
+    updateUserByIdIntoDB,
+    deleteUserFromDb
 };

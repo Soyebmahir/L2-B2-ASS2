@@ -24,7 +24,7 @@ const getSingleUserFromDB = async (id: number) => {
     if (!(await Users.isUserExist(id))) {
         throw new Error('This User not Exist in database');
     }
-    return await Users.find({ userId: id }, { password: 0 });
+    return await Users.find({ userId: id }, { password: 0, orders: 0 });
 };
 
 const updateUserByIdIntoDB = async (id: number, data: TUser) => {

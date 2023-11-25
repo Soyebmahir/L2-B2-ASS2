@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-this-alias */
 import { Schema, model } from 'mongoose';
+
 import bcrypt from 'bcrypt';
 import {
     TAddress,
@@ -50,6 +51,7 @@ const OrderSchema = new Schema<TOrder>({
     quantity: {
         type: Number,
     },
+
 });
 
 const UserSchema = new Schema<TUser, UniqueUserModel>({
@@ -92,10 +94,9 @@ const UserSchema = new Schema<TUser, UniqueUserModel>({
         type: AddressSchema,
         required: [true, 'Address is Required'],
     },
-    //   orders: {
-    //     type: [OrderSchema],
-    //   },
-    orders: Schema.Types.Mixed
+    orders: {
+        type: [OrderSchema],
+    },
 });
 
 //checking is User already exist

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-unused-vars */
 import { TOrder, TUser } from './user.interface';
@@ -70,7 +71,7 @@ const getAllOrdersOfSingleUsersFromDB = async (userId: number) => {
     ]);
 
     const [data] = result;
-    // data.orders = data?.orders?.map(({ _id, ...rest }) => rest);
+    data.orders = data?.orders?.map(({ _id, ...rest }: { _id: string, rest: TOrder }) => rest);
     return data;
 };
 

@@ -21,7 +21,6 @@ const createUser = async (req: Request, res: Response) => {
             data: savedUser,
         });
     } catch (error: any) {
-
         // If parsing fails, handle the error
         if (error instanceof ZodError) {
             // zod validation error
@@ -49,13 +48,12 @@ const createUser = async (req: Request, res: Response) => {
 };
 const getAllUsers = async (req: Request, res: Response) => {
     try {
-        const result = await UserServices.getAllUsersFromDB()
+        const result = await UserServices.getAllUsersFromDB();
         res.status(200).json({
             success: true,
             message: 'All Users Found Successfully.',
             data: result,
         });
-
     } catch (error: any) {
         //  unexpected Error
 
@@ -68,21 +66,19 @@ const getAllUsers = async (req: Request, res: Response) => {
             },
         });
     }
-}
+};
 
 const getSingleUser = async (req: Request, res: Response) => {
     try {
-        const { userId } = req.params
+        const { userId } = req.params;
 
-        const result = await UserServices.getSingleUserFromDB(Number(userId))
+        const result = await UserServices.getSingleUserFromDB(Number(userId));
         res.status(200).json({
             success: true,
             message: 'User Found Successfully.',
             data: result,
         });
-
     } catch (error: any) {
-
         //  unexpected Error
 
         res.status(500).json({
@@ -94,13 +90,16 @@ const getSingleUser = async (req: Request, res: Response) => {
             },
         });
     }
-}
+};
 
 const updateUserById = async (req: Request, res: Response) => {
     try {
-        const { userId } = req.params
+        const { userId } = req.params;
         const data = req.body;
-        const result = await UserServices.updateUserByIdIntoDB(Number(userId), data)
+        const result = await UserServices.updateUserByIdIntoDB(
+            Number(userId),
+            data,
+        );
         const savedUser = await UserServices.getSingleUserFromDB(result.userId);
         res.status(200).json({
             success: true,
@@ -119,12 +118,12 @@ const updateUserById = async (req: Request, res: Response) => {
             },
         });
     }
-}
+};
 
 const deleteUserById = async (req: Request, res: Response) => {
     try {
         const { userId } = req.params;
-        await UserServices.deleteUserFromDb(Number(userId))
+        await UserServices.deleteUserFromDb(Number(userId));
         res.status(200).json({
             success: true,
             message: 'User deleted Successfully.',
@@ -142,30 +141,73 @@ const deleteUserById = async (req: Request, res: Response) => {
             },
         });
     }
-}
+};
 
 const addProductInOrders = async (req: Request, res: Response) => {
     try {
-        const { userId } = req.params
-        const product = req.body
+        const { userId } = req.params;
+        const product = req.body;
 
-        const zodParseProduct = orderValidationSchema.parse(product)
-        const user = await UserServices.getSingleUserFromDB(Number(userId))
-        if (!user) {
-            res.status(500).json({
-                success: false,
-                message: 'User not Found',
-                error: {
-                    code: 404,
-                    description: "User not found"
-                },
-            });
-        }
-        await UserServices.addProductInOrderById(Number(userId), zodParseProduct)
+        const zodParseProduct = orderValidationSchema.parse(product);
+
+        await UserServices.addProductInOrderById(Number(userId), zodParseProduct);
         res.status(200).json({
             success: true,
             message: 'Order created Successfully.',
             data: null,
+        });
+    } catch (error: any) {
+        //  unexpected Error
+
+        res.status(500).json({
+            success: false,
+            message: error.message,
+            error: {
+                code: 404,
+                description: error.message,
+            },
+        });
+    }
+};
+const getAllOrdersOfSingleUsers = async (req: Request, res: Response) => {
+    try {
+        const result = await UserServices.getAllOrdersOfSingleUsersFromDB(
+            Number(req.params.userId),
+        );
+        res.status(200).json({
+            success: true,
+            message: 'Orders Found Successfully.',
+            data: result,
+        });
+    } catch (error: any) {
+        //  unexpected Error
+
+        res.status(500).json({
+            success: false,
+            message: error.message,
+            error: {
+                code: 404,
+                description: error.message,
+            },
+        });
+    }
+};
+const TotalPriceOfOrderForSpecificUser = async (req: Request, res: Response) => {
+
+    try {
+        const isOrderExist = await UserServices.getAllOrdersOfSingleUsersFromDB(
+            Number(req.params.userId),
+        );
+        console.log({ isOrderExist });
+        if (isOrderExist?.orders?.length < 1) {
+            throw new Error('No product Ordered')
+        }
+
+        const result = await UserServices.TotalPriceOfOrderForSpecificUserDB(Number(req.params.userId))
+        res.status(200).json({
+            success: true,
+            message: 'Orders Found Successfully.',
+            data: result,
         });
     } catch (error: any) {
         //  unexpected Error
@@ -188,5 +230,7 @@ export const UserController = {
     getAllUsers,
     updateUserById,
     deleteUserById,
-    addProductInOrders
+    addProductInOrders,
+    getAllOrdersOfSingleUsers,
+    TotalPriceOfOrderForSpecificUser
 };

@@ -12,13 +12,13 @@ const createUser = async (req: Request, res: Response) => {
         const zodParseUser = userValidationSchema.parse(user);
 
         const result = await UserServices.createUserIntoDb(zodParseUser);
-        const savedUser = await UserServices.getSingleUserFromDB(result.userId);
+        // const savedUser = await UserServices.getSingleUserFromDB(result.userId);
 
         // If parsing is successful, send the parsed data in the response
         res.status(200).json({
             success: true,
             message: 'User Created successfully.',
-            data: savedUser,
+            data: result,
         });
     } catch (error: any) {
         // If parsing fails, handle the error
@@ -96,11 +96,11 @@ const updateUserById = async (req: Request, res: Response) => {
     try {
         const { userId } = req.params;
         const data = req.body;
-        const zodParseUser = userValidationSchema.parse(data);
+        // const zodParseUser = userValidationSchema.parse(data);
 
         const result = await UserServices.updateUserByIdIntoDB(
             Number(userId),
-            zodParseUser,
+            data,
         );
         const savedUser = await UserServices.getSingleUserFromDB(result.userId);
         res.status(200).json({

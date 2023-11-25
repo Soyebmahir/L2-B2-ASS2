@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { Model } from 'mongoose';
+import { Model, ObjectId } from 'mongoose';
 
 export type TFullName = {
   firstName: string;
@@ -14,6 +14,7 @@ export type TOrder = {
   productName: string;
   price: number;
   quantity: number;
+  _id?: ObjectId
 };
 
 export type TUser = {

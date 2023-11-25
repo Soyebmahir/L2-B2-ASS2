@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-unused-vars */
 import { TOrder, TUser } from './user.interface';
 import { Users } from './user.model';
 
@@ -54,8 +56,6 @@ const addProductInOrderById = async (userId: number, product: TOrder) => {
 };
 
 const getAllOrdersOfSingleUsersFromDB = async (userId: number) => {
-
-
     if (!(await Users.isUserExist(userId))) {
         throw new Error('User Not Found');
     }
@@ -69,10 +69,9 @@ const getAllOrdersOfSingleUsersFromDB = async (userId: number) => {
         { $project: { _id: 0, orders: 1 } },
     ]);
 
-
-    const [data] = result
-    data.orders = data?.orders?.map(({ _id, ...rest }) => rest);
-    return data
+    const [data] = result;
+    // data.orders = data?.orders?.map(({ _id, ...rest }) => rest);
+    return data;
 };
 
 const TotalPriceOfOrderForSpecificUserDB = async (userId: number) => {
@@ -81,17 +80,18 @@ const TotalPriceOfOrderForSpecificUserDB = async (userId: number) => {
     }
     return await Users.aggregate([
         { $match: { userId: userId } },
-        { $unwind: "$orders" },
+        { $unwind: '$orders' },
         {
             $group: {
                 _id: null,
-                totalPrice: { $sum: { $multiply: ["$orders.price", "$orders.quantity"] } }
-            }
+                totalPrice: {
+                    $sum: { $multiply: ['$orders.price', '$orders.quantity'] },
+                },
+            },
         },
         { $project: { _id: 0, totalPrice: 1 } },
     ]);
-
-}
+};
 
 export const UserServices = {
     createUserIntoDb,
@@ -101,5 +101,5 @@ export const UserServices = {
     deleteUserFromDb,
     addProductInOrderById,
     getAllOrdersOfSingleUsersFromDB,
-    TotalPriceOfOrderForSpecificUserDB
+    TotalPriceOfOrderForSpecificUserDB,
 };

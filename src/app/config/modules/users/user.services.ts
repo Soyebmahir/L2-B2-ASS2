@@ -79,7 +79,7 @@ const TotalPriceOfOrderForSpecificUserDB = async (userId: number) => {
     if (!(await Users.isUserExist(userId))) {
         throw new Error('User Not Found');
     }
-    return await Users.aggregate([
+    const result = await Users.aggregate([
         { $match: { userId: userId } },
         { $unwind: '$orders' },
         {
@@ -92,6 +92,9 @@ const TotalPriceOfOrderForSpecificUserDB = async (userId: number) => {
         },
         { $project: { _id: 0, totalPrice: 1 } },
     ]);
+
+    const [data] = result
+    return data
 };
 
 export const UserServices = {

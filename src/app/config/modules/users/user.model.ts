@@ -82,9 +82,9 @@ const UserSchema = new Schema<TUser, UniqueUserModel>({
         required: [true, 'Email is required'],
     },
     isActive: {
-        type: String,
-        enum: ['active', 'blocked'],
-        default: 'active',
+        type: Boolean,
+
+        default: true,
     },
     hobbies: {
         type: [String],
